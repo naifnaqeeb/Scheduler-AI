@@ -1,7 +1,9 @@
-"use client";
-
-import { Protect } from "@clerk/nextjs";
-
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return <Protect>{children}</Protect>;
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  // Route protection is handled by middleware.ts via JWT cookie verification.
+  // No Clerk wrapping needed.
+  return <>{children}</>
 }
