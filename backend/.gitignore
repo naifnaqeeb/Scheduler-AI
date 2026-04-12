@@ -1,0 +1,26 @@
+# Python Virtual Environment
+.venv/
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables
+.env
+
+# Google Cloud Credentials & Tokens
+# These are user-specific and should NEVER be committed to Git
+credentials.json
+token.json
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# IDE & Editor specific
+.vscode/
+.idea/
