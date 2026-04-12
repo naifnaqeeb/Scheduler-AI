@@ -425,16 +425,16 @@ export default function UserDashboard() {
         </div>
       </motion.header>
 
-      <div className="container mx-auto p-4 max-w-7xl">
-        <div className="grid lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
+      <div className="container mx-auto p-4 max-w-7xl h-screen flex flex-col pt-20">
+        <div className="grid lg:grid-cols-3 gap-6 flex-1 min-h-0 mb-4 h-[calc(100vh-8rem)]">
           {/* Chat Panel */}
           <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="lg:col-span-2"
+            className="lg:col-span-2 min-h-0 flex flex-col h-full"
           >
-            <Card className="h-full flex flex-col">
+            <Card className="flex-1 flex flex-col min-h-0">
               <CardHeader className="flex-shrink-0 pb-3">
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -482,8 +482,8 @@ export default function UserDashboard() {
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="flex-1 flex flex-col p-0 min-h-0">
-                <div className="flex-1 overflow-y-auto p-4 scroll-smooth">
+              <CardContent className="flex-1 flex flex-col p-0 min-h-0 relative">
+                <div className="absolute inset-0 overflow-y-auto p-4 scroll-smooth">
                   <div className="space-y-4">
                     <AnimatePresence initial={false}>
                       {messages.map((message) => (
@@ -584,42 +584,42 @@ export default function UserDashboard() {
                     <div ref={messagesEndRef} />
                   </div>
                 </div>
-
-                {/* Input Area */}
-                <div className="border-t p-4">
-                  <div className="flex gap-2">
-                    <Input
-                      ref={inputRef}
-                      id="chat-input"
-                      value={inputMessage}
-                      onChange={(e) => setInputMessage(e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      placeholder={
-                        isInCall
-                          ? "Voice call in progress — type here anytime"
-                          : "Tell me what service you need (e.g. haircut tomorrow afternoon)..."
-                      }
-                      className="flex-1 rounded-xl"
-                      disabled={isTyping}
-                    />
-                    <Button
-                      id="chat-send-btn"
-                      onClick={handleSendMessage}
-                      disabled={!inputMessage.trim() || isTyping}
-                      className="rounded-xl"
-                    >
-                      {isTyping ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Send className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-2 text-center">
-                    Try: &quot;Book a massage for Saturday morning&quot; or &quot;I need a dentist appointment&quot;
-                  </p>
-                </div>
               </CardContent>
+
+              {/* Input Area */}
+              <div className="flex-shrink-0 border-t p-4 z-10 bg-card rounded-b-xl">
+                <div className="flex gap-2">
+                  <Input
+                    ref={inputRef}
+                    id="chat-input"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyDown={handleKeyPress}
+                    placeholder={
+                      isInCall
+                        ? "Voice call in progress — type here anytime"
+                        : "Tell me what service you need (e.g. haircut tomorrow afternoon)..."
+                    }
+                    className="flex-1 rounded-xl"
+                    disabled={isTyping}
+                  />
+                  <Button
+                    id="chat-send-btn"
+                    onClick={handleSendMessage}
+                    disabled={!inputMessage.trim() || isTyping}
+                    className="rounded-xl"
+                  >
+                    {isTyping ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-2 text-center">
+                  Try: &quot;Book a massage for Saturday morning&quot; or &quot;I need a dentist appointment&quot;
+                </p>
+              </div>
             </Card>
           </motion.div>
 
@@ -628,7 +628,7 @@ export default function UserDashboard() {
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-1"
+            className="lg:col-span-1 min-h-0 flex flex-col h-full"
           >
             <GoogleCalendarIntegration
               userType="user"
