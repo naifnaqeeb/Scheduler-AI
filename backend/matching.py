@@ -4,7 +4,7 @@ Service matching engine — filters and ranks services based on user intent
 """
 
 import re
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Set, Tuple
 from datetime import datetime, date
 
 
@@ -79,6 +79,41 @@ def infer_category(service_type: Optional[str], specific_service: Optional[str])
             best_match = category
 
     return best_match if best_score > 0 else None
+
+
+def extract_search_tags(service_type: Optional[str], specific_service: Optional[str]) -> List[str]:
+    """
+    Expand user intent into a full flat list of searchable tags.
+
+    Strategy:
+    1. Include the raw query words themselves.
+    2. Find the best-matching category in CATEGORY_MAP.
+    3. Include ALL keywords from that category — this ensures broad but
+       category-correct coverage without any LLM call.
+
+    Example: service_type="massage" →
+      matches "Wellness & Spa" → returns all 11 wellness keywords
+      + the raw word "massage"
+    """
+    text = " ".join(filter(None, [service_type, specific_service])).lower().strip()
+    if not text:
+        return []
+
+    tags: Set[str] = set()
+
+    # Include meaningful raw words from the query (skip filler words < 3 chars)
+    for word in re.split(r"\s+", text):
+        if len(word) >= 3:
+            tags.add(word)
+
+    # Find ALL matching categories and include their full keyword sets
+    # (a query like "massage therapy" may hit both Wellness & Spa and Healthcare)
+    for category, keywords in CATEGORY_MAP.items():
+        score = sum(1 for kw in keywords if kw in text)
+        if score > 0:
+            tags.update(kw.lower() for kw in keywords)
+
+    return sorted(tags)
 
 
 def parse_time_preference(time_str: Optional[str]) -> Optional[Tuple[str, str]]:
